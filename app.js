@@ -1,8 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const db = require('./models')
-const postRoutes = require('./app/api/post')
-const authorRoutes = require('./app/api/author')
 
 const app = express()
 
@@ -17,6 +15,4 @@ app.get('/', (req, res) => {
     res.status(200).send('Hello.')
 })
 
-postRoutes(app, db)
-authorRoutes(app, db)
 module.exports = app
