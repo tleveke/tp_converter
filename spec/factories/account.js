@@ -6,6 +6,5 @@ factory.setAdapter(adapter)
 const Account = require('../../models').Account
 
 factory.define('account', Account, {
-    name: factory.chance('name'),
-    email: factory.chance('email')
+    name: factory.chance('name')
 })
