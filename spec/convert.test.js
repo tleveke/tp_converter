@@ -5,6 +5,7 @@ const PayloadConverter = require('../converter/PayloadConverter');
 
 const cleanDb = require('./helpers/cleanDb')
 require('./factories/company').factory;
+require('./factories/account').factory;
 
 const factory = require('factory-girl').factory
 
@@ -58,12 +59,10 @@ describe('Payload Converter', () => {
     beforeEach(async () => {
         //await cleanDb(db)
         company = await factory.createMany('Companies', 5)
-
         for (let i = 0 ; i<5;i++) {
-            const lengthCompany = await db.Company.findAll().length
-            rnd = Math.floor(Math.random() * lengthCompany);
-
-            factory.build('Accounts', {companyId: rnd});
+            rnd = Math.floor(Math.random() * company.length);
+            console.log(company[rnd].id, rnd);
+            await factory.create('Accounts', {Company: company[rnd] });
         }
         payloadConvert = new PayloadConverter(payload);
     })
