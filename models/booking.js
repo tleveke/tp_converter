@@ -21,5 +21,9 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Booking',
   });
+  Booking.associate = (models) => {
+    Booking.belongsTo(models.Account, {as: 'clientId'})
+    Booking.belongsTo(models.Account, {as: 'employeeId'})
+  }
   return Booking;
 };

@@ -19,5 +19,8 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Company',
   });
+  Company.associate = (models) => {
+    Company.hasMany(models.Account)
+  }
   return Company;
 };
