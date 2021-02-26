@@ -6,8 +6,8 @@ factory.setAdapter(adapter)
 const Account = require('../../models').Account
 
 factory.define('Accounts', Account, {
-    name: factory.sequence((n) => `name${n}`),
-    email: factory.sequence((n) => `client@client.com`)
+    name: factory.chance('name'),
+    companyId: null
 })
 
 /*factory.define('Accounts', Account, (buildOptions = {}) => {
