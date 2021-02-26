@@ -38,14 +38,14 @@ class PayloadConverter {
     }
 
     onStart() {
-        let start = this.payload.start;
-        let dateStart = new Date(start.date_time);
+        const start = this.payload.start;
+        const dateStart = new Date(start.date_time);
         return dateStart;
     }
 
     onEnd() {
-        let end = this.payload.end;
-        let dateEnd =  new Date(end.date_time);
+        const end = this.payload.end;
+        const dateEnd =  new Date(end.date_time);
         return dateEnd;
     }
 }
