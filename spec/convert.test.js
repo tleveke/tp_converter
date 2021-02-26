@@ -2,11 +2,10 @@ const request = require('supertest')
 const app = require('../app')
 const db = require('../models');
 const PayloadConverter = require('../converter/PayloadConverter');
-/*
+
 const cleanDb = require('./helpers/cleanDb')
-require('./factories/author').factory;
-require('./factories/post').factory;
-*/
+require('./factories/company').factory;
+
 const factory = require('factory-girl').factory
 
 const payloadGlobal = {
@@ -32,11 +31,11 @@ const payloadGlobal = {
                     }
 
 beforeAll(async () => {
-    //await cleanDb(db)
+    await cleanDb(db)
 });
 
 afterAll(async () => {
-    //await cleanDb(db)
+    await cleanDb(db)
     await db.close()
 });
 
@@ -44,7 +43,7 @@ describe('GET /', () => {
     let response;
 
     beforeEach(async () => {
-        //await cleanDb(db)
+        await cleanDb(db)
         response = await request(app).get('/');
     })
 
@@ -58,11 +57,9 @@ describe('Payload Converter', () => {
     let payloadConvert;
 
     beforeEach(async () => {
-        //await cleanDb(db)
-
+        await cleanDb(db)
+        //company = await factory.createMany('gtggtt', 5)
         payloadConvert = new PayloadConverter(payload);
-        console.log(payloadConvert.onStart() instanceof Date);
-        console.log(payload.start.date_time,'sdqqdssqqd', payloadConvert.onStart());
     })
 
     test('Expect idGoogle = MGptdjJ1ZDljMWo3Y2kyZzFqZ21ybWY2c3Mgbmlja0BnZW1iYW5pLmNvbQ', async () => {
