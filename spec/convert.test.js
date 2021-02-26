@@ -59,17 +59,19 @@ describe('Payload Converter', () => {
 
     beforeEach(async () => {
         //await cleanDb(db)
-        await factory.createMany('Bookings', 2);
 
         /*
         let Account = await factory.createMany('Accounts', 5)*/
         company = await factory.createMany('Companies', 5)
         let compagnies = await db.Company.findAll();
-
+        await factory.createMany('Bookings', 2);
+        const accounts = await db.Account.findAll();
 
         for (let i = 0 ; i<5;i++) {
-            rnd = Math.floor(Math.random() * compagnies.length);
-            await factory.create('Accounts', {CompanyId: compagnies[rnd].id});
+            rndCompagnies = Math.floor(Math.random() * compagnies.length);
+            rndAccounts = Math.floor(Math.random() * accounts.length);
+            await factory.create('Accounts', {CompanyId: compagnies[rndCompagnies].id});
+            await factory.create('Bookings', {clientId: accounts[rndAccounts].id, employeeId: accounts[rndAccounts].id});
         }
 
         /*await db.Account.create({
