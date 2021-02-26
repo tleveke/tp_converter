@@ -31,19 +31,18 @@ const payloadGlobal = {
                     }
 
 beforeAll(async () => {
-    await cleanDb(db)
+    //await cleanDb(db)
 });
 
 afterAll(async () => {
-    await cleanDb(db)
-    await db.close()
+    //await cleanDb(db)
+    //await db.close()
 });
 
 describe('GET /', () => {
     let response;
 
     beforeEach(async () => {
-        await cleanDb(db)
         response = await request(app).get('/');
     })
 
@@ -57,8 +56,15 @@ describe('Payload Converter', () => {
     let payloadConvert;
 
     beforeEach(async () => {
-        await cleanDb(db)
-        //company = await factory.createMany('gtggtt', 5)
+        //await cleanDb(db)
+        company = await factory.createMany('Companies', 5)
+
+        for (let i = 0 ; i<5;i++) {
+            const lengthCompany = await db.Company.findAll().length
+            rnd = Math.floor(Math.random() * lengthCompany);
+
+            factory.build('Accounts', {companyId: rnd});
+        }
         payloadConvert = new PayloadConverter(payload);
     })
 

@@ -5,6 +5,6 @@ factory.setAdapter(adapter)
 
 const Company = require('../../models').Company
 
-factory.define('gtggtt', Company, {
+factory.define('Companies', Company, {
     name: factory.sequence((n) => `firstName${n}`)
 })
