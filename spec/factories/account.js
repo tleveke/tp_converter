@@ -7,7 +7,8 @@ const Account = require('../../models').Account
 
 factory.define('Accounts', Account, {
     name: factory.chance('name'),
-    companyId: null
+    CompanyId: factory.assoc('Companies', '_id'),
+    UserId: factory.assoc('Users', '_id')
 })
 
 /*factory.define('Accounts', Account, (buildOptions = {}) => {
