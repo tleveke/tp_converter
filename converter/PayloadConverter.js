@@ -36,6 +36,14 @@ class PayloadConverter {
         const id = html_link.split('?eid=')[1];
         return id;
     }
+    getOrganizater() {
+        let tabOrga = this.payload.attendees.filter(att => att.organize === true);
+        return tabOrga;
+    }
+    getNotClient() {
+        let tabOrga = this.payload.attendees.filter(att => att.organize !== true);
+        return tabOrga;
+    }
 
     onStart() {
         const start = this.payload.start;

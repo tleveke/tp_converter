@@ -60,12 +60,26 @@ describe('Payload Converter', () => {
     beforeEach(async () => {
         //await cleanDb(db)
         await factory.createMany('Bookings', 2);
+
+        /*
+        let Account = await factory.createMany('Accounts', 5)*/
         company = await factory.createMany('Companies', 5)
+        let compagnies = await db.Company.findAll();
+
+
         for (let i = 0 ; i<5;i++) {
-            rnd = Math.floor(Math.random() * company.length);
-            console.log(company[rnd].id, rnd);
-            await factory.create('Accounts', {Company: company[rnd] });
+            rnd = Math.floor(Math.random() * compagnies.length);
+            await factory.create('Accounts', {CompanyId: compagnies[rnd].id});
         }
+
+        /*await db.Account.create({
+            name: 'CompanyId',
+            CompanyId: 1,
+        });*/
+
+
+
+
         payloadConvert = new PayloadConverter(payload);
     })
 

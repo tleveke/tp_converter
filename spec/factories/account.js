@@ -6,9 +6,7 @@ factory.setAdapter(adapter)
 const Account = require('../../models').Account
 
 factory.define('Accounts', Account, {
-    name: factory.chance('name'),
-    CompanyId: factory.assoc('Companies', '_id'),
-    UserId: factory.assoc('Users', '_id')
+    name: factory.chance('name')
 })
 
 /*factory.define('Accounts', Account, (buildOptions = {}) => {
