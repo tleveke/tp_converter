@@ -108,7 +108,7 @@ describe('Payload Converter', () => {
     });
 
     test(`Expect getClientsId`, async () => {
-        const clientsId = payloadConvert.getClientsId();
+        const clientsId = await payloadConvert.getClientsId();
         expect(!clientsId.some(isNaN)).toBe(true);
     });
 });
@@ -131,11 +131,16 @@ describe('Payload Converter BDD', () => {
 
         const onStart = payloadConvert.onStart();
         const onEnd = payloadConvert.onEnd();
+        const clientsId = await payloadConvert.getClientsId();
+
+        console.log(clientsId,"dsqqdsqdsdqsqsdqdsqdsqdsqsdqdsqdsqds");
 
 
         employee = await payloadConvert.createOrganizator(organizater, compagnies[rndCompagnies]);
-        console.log(employee)
-        await factory.create('Bookings', {idGoogle : idGoogle, startDate : onStart, endDate: onEnd, EmployeeId : employee.id});
+        clientsId.forEach(async (idClient) => {
+            await factory.create('Bookings', {idGoogle : idGoogle, startDate : onStart, endDate: onEnd,ClientId: idClient,
+                EmployeeId : employee.id});
+        });
         expect(payloadConvert.getIdGoogle()).toBe('MGptdjJ1ZDljMWo3Y2kyZzFqZ21ybWY2c3Mgbmlja0BnZW1iYW5pLmNvbQ');
     });
 })

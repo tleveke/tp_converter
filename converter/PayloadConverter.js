@@ -49,47 +49,23 @@ class PayloadConverter {
         return tabOrga;
     }
 
-    getClientsId() {
+    async getClientsId() {
         var clientsId = [];
         const payloadClients = this.payload.attendees.filter(att => att.organizer !== true && att.response_status === 'accepted');
-<<<<<<< Updated upstream
-        payloadClients.map((client) => {
-            const user = db.User.findOne({
+        payloadClients.map(async (client) => {
+            const user = await db.User.findOne({
                 where: {
                     email: client.email
                 }
             });
             if(user) {
-                const account = db.Account.findOne({
+                const account = await db.Account.findOne({
                     where: {
                         UserId: user.id
                     }
                 });
                 if(account && account.CompanyId === null) {
                     clientsId.push(user.id);
-=======
-        payloadClients.forEach((client) => {
-            db.User.findOne({
-                where: {
-                    email: client.email
-                }
-            }).then((user) => {
-                if(user) {
-                   db.Account.findOne({
-                        where: {
-                            UserId: user.id
-                        }
-                    }).then((account) => {
-                       if(account && account.CompanyId === null) {
-                           clientsId.push(user.id);
-                       } else {
-                           clientsId.push(id);
-                       }
-                   });
->>>>>>> Stashed changes
-                } else {
-                    const id =  this.createClient(client);
-                    clientsId.push(id);
                 }
             } else {
                 const id =  this.createClient(client);
@@ -99,19 +75,17 @@ class PayloadConverter {
         return clientsId;
     }
 
-    createClient(client) {
-        db.User.create({
+    async createClient(client) {
+        await db.User.create({
             email: client.email,
             name: client.displayName
-        }).then(user => {
-            console.log(user);
+        }).then(async (user) => {
+            await db.Account.create({
+                UserId: user.id,
+                name: client.displayName
+            });
+            return user.id;
         })
-
-        db.Account.create({
-            UserId: user.id,
-            name: client.displayName
-        });
-        return user.id;
     }
 
     async createOrganizator(organizater, company) {
