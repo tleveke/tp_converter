@@ -7,6 +7,7 @@ const cleanDb = require('./helpers/cleanDb')
 require('./factories/company').factory;
 require('./factories/account').factory;
 require('./factories/booking').factory;
+require('./factories/user').factory;
 
 const factory = require('factory-girl').factory
 
@@ -39,7 +40,7 @@ const payloadGlobal = {
                     }
 
 beforeAll(async () => {
-    //await cleanDb(db)
+    await cleanDb(db)
 });
 
 afterAll(async () => {
@@ -66,13 +67,18 @@ describe('Payload Converter', () => {
     beforeEach(async () => {
         await cleanDb(db)
 
-        Account = await factory.createMany('Accounts', 5)
+        await factory.createMany('Users', 20)
         await factory.createMany('Companies', 5)
 
         const compagnies = await db.Company.findAll();
+        const users = await db.User.findAll();
+
         for (let i = 0 ; i<5;i++) {
             rndCompagnies = Math.floor(Math.random() * compagnies.length);
-            await factory.create('Accounts', {CompanyId: compagnies[rndCompagnies].id});
+            rndUsers = Math.floor(Math.random() * users.length);
+            //await factory.create('Accounts', {CompanyId: compagnies[rndCompagnies].id});
+            console.log(users[rndUsers].id,"qdsdqsqdsqds");
+            await factory.create('Accounts', {CompanyId: compagnies[rndCompagnies].id, UserId: users[rndUsers].id });
         }
 
         const accounts = await db.Account.findAll();
