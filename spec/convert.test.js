@@ -71,7 +71,7 @@ describe('Payload Converter', () => {
             rndCompagnies = Math.floor(Math.random() * compagnies.length);
             rndAccounts = Math.floor(Math.random() * accounts.length);
             await factory.create('Accounts', {CompanyId: compagnies[rndCompagnies].id});
-            await factory.create('Bookings', {clientId: accounts[rndAccounts].id, employeeId: accounts[rndAccounts].id});
+            await factory.create('Bookings', {ClientId: accounts[rndAccounts].id, EmployeeId: accounts[rndAccounts].id});
         }
 
         /*await db.Account.create({
