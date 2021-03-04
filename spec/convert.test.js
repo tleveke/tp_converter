@@ -40,23 +40,11 @@ const payloadGlobal = {
 
 beforeAll(async () => {
     //await cleanDb(db)
-    let Account = await factory.createMany('Accounts', 5)
-    company = await factory.createMany('Companies', 5)
-    let compagnies = await db.Company.findAll();
-    await factory.createMany('Bookings', 2);
-    const accounts = await db.Account.findAll();
-
-    for (let i = 0 ; i<5;i++) {
-        rndCompagnies = Math.floor(Math.random() * compagnies.length);
-        rndAccounts = Math.floor(Math.random() * accounts.length);
-        await factory.create('Accounts', {CompanyId: compagnies[rndCompagnies].id});
-        await factory.create('Bookings', {ClientId: accounts[rndAccounts].id, EmployeeId: accounts[rndAccounts].id});
-    }
 });
 
 afterAll(async () => {
     //await cleanDb(db)
-    //await db.close()
+    await db.close()
 });
 
 describe('GET /', () => {
@@ -76,10 +64,30 @@ describe('Payload Converter', () => {
     let payloadConvert;
 
     beforeEach(async () => {
-        //await cleanDb(db)
+        await cleanDb(db)
+
+        Account = await factory.createMany('Accounts', 5)
+        await factory.createMany('Companies', 5)
+
+        const compagnies = await db.Company.findAll();
+        for (let i = 0 ; i<5;i++) {
+            rndCompagnies = Math.floor(Math.random() * compagnies.length);
+            await factory.create('Accounts', {CompanyId: compagnies[rndCompagnies].id});
+        }
+
+        const accounts = await db.Account.findAll();
+        for (let i = 0 ; i<5;i++) {
+            rndAccounts = Math.floor(Math.random() * accounts.length);
+            rndAccountsClient = Math.floor(Math.random() * accounts.length);
+            await factory.create('Bookings', {ClientId: accounts[rndAccountsClient].id, EmployeeId: accounts[rndAccounts].id});
+        }
+
         payloadConvert = new PayloadConverter(payload);
     })
 
+    test('Expect idGoogle = MGptdjJ1ZDljMWo3Y2kyZzFqZ21ybWY2c3Mgbmlja0BnZW1iYW5pLmNvbQ', async () => {
+        expect(payloadConvert.getIdGoogle()).toBe('MGptdjJ1ZDljMWo3Y2kyZzFqZ21ybWY2c3Mgbmlja0BnZW1iYW5pLmNvbQ');
+    });
     test('Expect idGoogle = MGptdjJ1ZDljMWo3Y2kyZzFqZ21ybWY2c3Mgbmlja0BnZW1iYW5pLmNvbQ', async () => {
         expect(payloadConvert.getIdGoogle()).toBe('MGptdjJ1ZDljMWo3Y2kyZzFqZ21ybWY2c3Mgbmlja0BnZW1iYW5pLmNvbQ');
     });
