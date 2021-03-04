@@ -126,14 +126,34 @@ describe('Payload Converter BDD', () => {
     });
     test('Create Bookings with Payloads', async () => {
 
-        const clients = payloadConvert.getClients();
-        const organizater = payloadConvert.getOrganizater();
+        const compagnies = await db.Company.findAll();
+        rndCompagnies = Math.floor(Math.random() * compagnies.length);
+
+        //const clients = payloadConvert.getClients();
+        const organizater = payloadConvert.getOrganizater()[0];
         const idGoogle = payloadConvert.getIdGoogle();
 
         const onStart = payloadConvert.onStart();
         const onEnd = payloadConvert.onEnd();
+        console.log(organizater, "dqqdsqdsdsq");
 
-        await factory.create('Bookings', {idGoogle : idGoogle, startDate : onStart, endDate: onEnd});
+        let user = await db.User.findOne({ where: { email: organizater.email } });
+        let employeeID = null;
+
+        if (user === null) {
+            console.log('Not found!');
+            user = await factory.create('Users', { name:organizater.displayName, email:organizater.email });
+        }
+
+        let account = await db.Account.findOne({ where: { UserId: user.id } });
+
+        if (account === null) {
+            account = await factory.create('Accounts', {CompanyId: compagnies[rndCompagnies].id, UserId: user.id, name:organizater.displayName });
+        }
+
+        employeeID = account.id;
+
+        await factory.create('Bookings', {idGoogle : idGoogle, startDate : onStart, endDate: onEnd, EmployeeId : employeeID});
         expect(payloadConvert.getIdGoogle()).toBe('MGptdjJ1ZDljMWo3Y2kyZzFqZ21ybWY2c3Mgbmlja0BnZW1iYW5pLmNvbQ');
     });
 })
