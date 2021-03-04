@@ -44,8 +44,8 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    //await cleanDb(db)
-    await db.close()
+    // await cleanDb(db)
+    // await db.close()
 });
 
 describe('GET /', () => {
@@ -98,11 +98,6 @@ describe('Payload Converter', () => {
         expect(payloadConvert.getOrganizater().length).toBe(1);
         expect(payloadConvert.getOrganizater()[0].displayName).toBe('Nick Stock');
     });
-    /*test('Expect getClients', async () => {
-        expect(payloadConvert.getClients().length).toBe(2);
-        expect(payloadConvert.getClients()[0].displayName).toBe('Nicholas Stock');
-        expect(payloadConvert.getClients()[1].displayName).toBe('John Stock');
-    });*/
     test(`Expect Date and startDate = ${payload.start.date_time}`, async () => {
         expect(payloadConvert.onStart() instanceof Date).toBe(true);
         expect(payloadConvert.onStart().getTime()).toBe(new Date(payload.start.date_time).getTime());
@@ -113,7 +108,11 @@ describe('Payload Converter', () => {
     });
 
     test(`Expect getClientsId`, async () => {
-        // payloadConvert.getClientsId();
+        const clientsId = payloadConvert.getClientsId();
+        expect(typeof clientsId).toBe('array');
+        clientsId.every(function(element) {
+            expect(typeof element).toBe('number');
+        });
     });
 });
 
