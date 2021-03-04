@@ -39,12 +39,12 @@ const payloadGlobal = {
                     }
 
 beforeAll(async () => {
-    //await cleanDb(db)
+    await cleanDb(db)
 });
 
 afterAll(async () => {
     //await cleanDb(db)
-    //await db.close()
+    await db.close()
 });
 
 describe('GET /', () => {
@@ -64,21 +64,23 @@ describe('Payload Converter', () => {
     let payloadConvert;
 
     beforeEach(async () => {
-        //await cleanDb(db)
+        await cleanDb(db)
 
         /*
         let Account = await factory.createMany('Accounts', 5)*/
         company = await factory.createMany('Companies', 5)
         let compagnies = await db.Company.findAll();
-        await factory.createMany('Bookings', 2);
-        const accounts = await db.Account.findAll();
 
         for (let i = 0 ; i<5;i++) {
             rndCompagnies = Math.floor(Math.random() * compagnies.length);
-            rndAccounts = Math.floor(Math.random() * accounts.length);
             await factory.create('Accounts', {CompanyId: compagnies[rndCompagnies].id});
+        }
+        const accounts = await db.Account.findAll();
+        for (let y = 0; y<5;y++) {
+            rndAccounts = Math.floor(Math.random() * accounts.length);
             await factory.create('Bookings', {clientId: accounts[rndAccounts].id, employeeId: accounts[rndAccounts].id});
         }
+
 
         /*await db.Account.create({
             name: 'CompanyId',
@@ -91,6 +93,9 @@ describe('Payload Converter', () => {
         payloadConvert = new PayloadConverter(payload);
     })
 
+    test('Expect idGoogle = MGptdjJ1ZDljMWo3Y2kyZzFqZ21ybWY2c3Mgbmlja0BnZW1iYW5pLmNvbQ', async () => {
+        expect(payloadConvert.getIdGoogle()).toBe('MGptdjJ1ZDljMWo3Y2kyZzFqZ21ybWY2c3Mgbmlja0BnZW1iYW5pLmNvbQ');
+    });
     test('Expect idGoogle = MGptdjJ1ZDljMWo3Y2kyZzFqZ21ybWY2c3Mgbmlja0BnZW1iYW5pLmNvbQ', async () => {
         expect(payloadConvert.getIdGoogle()).toBe('MGptdjJ1ZDljMWo3Y2kyZzFqZ21ybWY2c3Mgbmlja0BnZW1iYW5pLmNvbQ');
     });
