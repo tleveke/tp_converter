@@ -51,41 +51,26 @@ class PayloadConverter {
 
     async getClientsId() {
         var clientsId = [];
-        const payloadClients = this.payload.attendees.filter(att => att.organizer !== true && att.response_status === 'accepted');
+        const payloadClients = this.payload.attendees.filter(att => att.response_status === 'accepted');
         payloadClients.map(async (client) => {
-            const user = await db.User.findOne({
+            const user = await db.User.findOrCreate({
                 where: {
                     email: client.email
+                },
+                defaults: {
+                    name: client.displayName
                 }
             });
-            if(user) {
-                const account = await db.Account.findOne({
-                    where: {
-                        UserId: user.id
-                    }
-                });
-                if(account && account.CompanyId === null) {
-                    clientsId.push(user.id);
+            const account = await db.Account.findOne({
+                where: {
+                    CompanyId: user.CompanyId
                 }
-            } else {
-                const id =  this.createClient(client);
-                clientsId.push(id);
+            });
+            if(!account) {
+                clientsId.push(user.id);
             }
         })
         return clientsId;
-    }
-
-    async createClient(client) {
-        await db.User.create({
-            email: client.email,
-            name: client.displayName
-        }).then(async (user) => {
-            await db.Account.create({
-                UserId: user.id,
-                name: client.displayName
-            });
-            return user.id;
-        })
     }
 
     async createOrganizator(organizater, company) {
