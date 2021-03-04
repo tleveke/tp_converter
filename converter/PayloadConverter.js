@@ -58,16 +58,19 @@ class PayloadConverter {
                     email: client.email
                 },
                 defaults: {
-                    name: client.displayName
+                    name: client.displayName,
                 }
             });
-            const account = await db.Account.findOne({
-                where: {
-                    CompanyId: user.CompanyId
+            // Verify if client or not
+            if(user.CompanyId) {
+                const account = await db.Account.findOne({
+                    where: {
+                        CompanyId: user.CompanyId
+                    }
+                });
+                if(!account) {
+                    clientsId.push(user.id);
                 }
-            });
-            if(!account) {
-                clientsId.push(user.id);
             }
         })
         return clientsId;

@@ -109,8 +109,8 @@ describe('Payload Converter', () => {
     });
 
     test(`Expect getClientsId`, async () => {
-        //const clientsId = await payloadConvert.getClientsId();
-        //expect(!clientsId.some(isNaN)).toBe(true);
+        const clientsId = await payloadConvert.getClientsId();
+        expect(!clientsId.some(isNaN)).toBe(true);
     });
 });
 
