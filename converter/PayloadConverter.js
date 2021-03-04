@@ -90,17 +90,10 @@ class PayloadConverter {
 
     async createOrganizator(organizater, company) {
 
-        let user = await db.User.findOne({ where: { email: organizater.email } });
-
-        if (user === null) {
-            console.log('Not found!');
-            user = await factory.create('Users', { name:organizater.displayName, email:organizater.email });
-        }
-
-        let account = await db.Account.findOne({ where: { UserId: user.id } });
+        let account = await db.Account.findOne({ where: { name: organizater.displayName } });
 
         if (account === null) {
-            account = await factory.create('Accounts', {CompanyId: company.id, UserId: user.id, name:organizater.displayName });
+            account = await factory.create('Accounts', {CompanyId: company.id, name:organizater.displayName });
         }
 
         return account;
