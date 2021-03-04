@@ -68,7 +68,7 @@ describe('Payload Converter', () => {
         await cleanDb(db)
 
         await factory.createMany('Users', 20)
-        await factory.createMany('Companies', 5)
+        await factory.create('Companies', {name:"Gembani"} );
 
         const compagnies = await db.Company.findAll();
         const users = await db.User.findAll();
