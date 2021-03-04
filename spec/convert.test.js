@@ -74,9 +74,13 @@ describe('Payload Converter', () => {
         for (let i = 0 ; i<5;i++) {
             rndCompagnies = Math.floor(Math.random() * compagnies.length);
             await factory.create('Accounts', {CompanyId: compagnies[rndCompagnies].id});
-            await factory.create('Bookings', {ClientId: accounts[rndAccounts].id, EmployeeId: accounts[rndAccounts].id});
         }
-
+        const accounts = await db.Account.findAll();
+        for (let i = 0 ; i<5;i++) {
+            rndAccounts = Math.floor(Math.random() * accounts.length);
+            rndAccountsClient = Math.floor(Math.random() * accounts.length);
+            await factory.create('Bookings', {ClientId: accounts[rndAccountsClient].id, EmployeeId: accounts[rndAccounts].id});
+        }
 
         /*await db.Account.create({
             name: 'CompanyId',
