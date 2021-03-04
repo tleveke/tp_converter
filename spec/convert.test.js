@@ -96,17 +96,14 @@ describe('Payload Converter', () => {
     test('Expect idGoogle = MGptdjJ1ZDljMWo3Y2kyZzFqZ21ybWY2c3Mgbmlja0BnZW1iYW5pLmNvbQ', async () => {
         expect(payloadConvert.getIdGoogle()).toBe('MGptdjJ1ZDljMWo3Y2kyZzFqZ21ybWY2c3Mgbmlja0BnZW1iYW5pLmNvbQ');
     });
-    test('Expect idGoogle = MGptdjJ1ZDljMWo3Y2kyZzFqZ21ybWY2c3Mgbmlja0BnZW1iYW5pLmNvbQ', async () => {
-        expect(payloadConvert.getIdGoogle()).toBe('MGptdjJ1ZDljMWo3Y2kyZzFqZ21ybWY2c3Mgbmlja0BnZW1iYW5pLmNvbQ');
-    });
     test('Expect Organizator', async () => {
         expect(payloadConvert.getOrganizater().length).toBe(1);
         expect(payloadConvert.getOrganizater()[0].displayName).toBe('Nick Stock');
     });
-    test('Expect Not client', async () => {
-        expect(payloadConvert.getNotClient().length).toBe(2);
-        expect(payloadConvert.getNotClient()[0].displayName).toBe('Nicholas Stock');
-        expect(payloadConvert.getNotClient()[1].displayName).toBe('John Stock');
+    test('Expect getClients', async () => {
+        expect(payloadConvert.getClients().length).toBe(2);
+        expect(payloadConvert.getClients()[0].displayName).toBe('Nicholas Stock');
+        expect(payloadConvert.getClients()[1].displayName).toBe('John Stock');
     });
     test(`Expect Date and startDate = ${payload.start.date_time}`, async () => {
         expect(payloadConvert.onStart() instanceof Date).toBe(true);
@@ -117,3 +114,24 @@ describe('Payload Converter', () => {
         expect(payloadConvert.onEnd().getTime()).toBe(new Date(payload.end.date_time).getTime());
     });
 });
+
+describe('Payload Converter BDD', () => {
+    let payload = payloadGlobal;
+    let payloadConvert;
+
+    beforeEach(async () => {
+        payloadConvert = new PayloadConverter(payload);
+    });
+    test('Create Bookings with Payloads', async () => {
+
+        const clients = payloadConvert.getClients();
+        const organizater = payloadConvert.getOrganizater();
+        const idGoogle = payloadConvert.getIdGoogle();
+
+        const onStart = payloadConvert.onStart();
+        const onEnd = payloadConvert.onEnd();
+
+        await factory.create('Bookings', {idGoogle : idGoogle, startDate : onStart, endDate: onEnd});
+        expect(payloadConvert.getIdGoogle()).toBe('MGptdjJ1ZDljMWo3Y2kyZzFqZ21ybWY2c3Mgbmlja0BnZW1iYW5pLmNvbQ');
+    });
+})

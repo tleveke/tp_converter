@@ -46,7 +46,7 @@ class PayloadConverter {
         let tabOrga = this.payload.attendees.filter(att => att.organizer === true);
         return tabOrga;
     }
-    getNotClient() {
+    getClients() {
         let tabOrga = this.payload.attendees.filter(att => att.organizer !== true && att.response_status == 'accepted');
         return tabOrga;
     }
