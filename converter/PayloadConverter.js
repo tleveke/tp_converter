@@ -48,6 +48,7 @@ class PayloadConverter {
         let tabOrga = this.payload.attendees.filter(att => att.organizer === true);
         return tabOrga;
     }
+
     getClientsId() {
         var clientsId = [];
         const payloadClients = this.payload.attendees.filter(att => att.organizer !== true && att.response_status === 'accepted');
