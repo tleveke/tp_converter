@@ -52,40 +52,48 @@ class PayloadConverter {
     getClientsId() {
         var clientsId = [];
         const payloadClients = this.payload.attendees.filter(att => att.organizer !== true && att.response_status === 'accepted');
-        payloadClients.map(client => {
-            const user = db.User.findOne({
+        payloadClients.map((client) => {
+            db.User.findOne({
                 where: {
                     email: client.email
                 }
-            });
-            if(user) {
-                const account = db.Account.findOne({
-                    where: {
-                        UserId: user.id
-                    }
-                });
-                if(account && account.CompanyId === null) {
-                    clientsId.push(user.id);
+            }).then((user) => {
+                if(user) {
+                   db.Account.findOne({
+                        where: {
+                            UserId: user.id
+                        }
+                    }).then((account) => {
+                       if(account && account.CompanyId === null) {
+                           clientsId.push(user.id);
+                       } else {
+                           const id =  this.createClient(client);
+                           clientsId.push(id);
+                       }
+                   });
                 } else {
                     const id =  this.createClient(client);
                     clientsId.push(id);
                 }
-            } else {
-                const id =  this.createClient(client);
-                clientsId.push(id);
-            }
+            })
         })
         return clientsId;
     }
 
     createClient(client) {
-        const user = db.User.create({
+        var id = null;
+        db.User.create({
             email: client.email,
             name: client.displayName
+        }).then((user) => {
+            db.Account.create({
+                UserId: user.id,
+                name: client.displayName
+            });
+            id = user.id;
         });
-        return user.id;
+        return id;
     }
-
 
     onStart() {
         const start = this.payload.start;
