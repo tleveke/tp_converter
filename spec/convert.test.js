@@ -40,6 +40,18 @@ const payloadGlobal = {
 
 beforeAll(async () => {
     //await cleanDb(db)
+    let Account = await factory.createMany('Accounts', 5)
+    company = await factory.createMany('Companies', 5)
+    let compagnies = await db.Company.findAll();
+    await factory.createMany('Bookings', 2);
+    const accounts = await db.Account.findAll();
+
+    for (let i = 0 ; i<5;i++) {
+        rndCompagnies = Math.floor(Math.random() * compagnies.length);
+        rndAccounts = Math.floor(Math.random() * accounts.length);
+        await factory.create('Accounts', {CompanyId: compagnies[rndCompagnies].id});
+        await factory.create('Bookings', {ClientId: accounts[rndAccounts].id, EmployeeId: accounts[rndAccounts].id});
+    }
 });
 
 afterAll(async () => {
@@ -65,29 +77,6 @@ describe('Payload Converter', () => {
 
     beforeEach(async () => {
         //await cleanDb(db)
-
-        /*
-        let Account = await factory.createMany('Accounts', 5)*/
-        company = await factory.createMany('Companies', 5)
-        let compagnies = await db.Company.findAll();
-        await factory.createMany('Bookings', 2);
-        const accounts = await db.Account.findAll();
-
-        for (let i = 0 ; i<5;i++) {
-            rndCompagnies = Math.floor(Math.random() * compagnies.length);
-            rndAccounts = Math.floor(Math.random() * accounts.length);
-            await factory.create('Accounts', {CompanyId: compagnies[rndCompagnies].id});
-            await factory.create('Bookings', {ClientId: accounts[rndAccounts].id, EmployeeId: accounts[rndAccounts].id});
-        }
-
-        /*await db.Account.create({
-            name: 'CompanyId',
-            CompanyId: 1,
-        });*/
-
-
-
-
         payloadConvert = new PayloadConverter(payload);
     })
 
