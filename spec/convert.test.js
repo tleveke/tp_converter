@@ -109,10 +109,7 @@ describe('Payload Converter', () => {
 
     test(`Expect getClientsId`, async () => {
         const clientsId = payloadConvert.getClientsId();
-        expect(typeof clientsId).toBe('array');
-        clientsId.every(function(element) {
-            expect(typeof element).toBe('number');
-        });
+        expect(!clientsId.some(isNaN)).toBe(true);
     });
 });
 
