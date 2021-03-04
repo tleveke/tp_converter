@@ -53,7 +53,7 @@ class PayloadConverter {
         var clientsId = [];
         const payloadClients = this.payload.attendees.filter(att => att.response_status === 'accepted');
         payloadClients.map(async (client) => {
-            const user = await db.User.findOrCreate({
+            const [user, created] = await db.User.findOrCreate({
                 where: {
                     email: client.email
                 },
@@ -62,13 +62,13 @@ class PayloadConverter {
                 }
             });
             // Verify if client or not
-            if(user.CompanyId) {
+            if(!created) {
                 const account = await db.Account.findOne({
                     where: {
                         CompanyId: user.CompanyId
                     }
                 });
-                if(!account) {
+                if(account === null) {
                     clientsId.push(user.id);
                 }
             }

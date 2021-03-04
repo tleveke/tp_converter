@@ -68,19 +68,34 @@ describe('Payload Converter', () => {
         await cleanDb(db)
 
         await factory.create('Companies', {name:"Gembani"} );
+        await factory.create('Companies', {name:"Company 2"} );
 
         const compagnies = await db.Company.findAll();
 // await factory.createMany('Users', 20)
 
-        for (let i = 0 ; i<20;i++) {
+        for (let i = 0 ; i<5;i++) {
             rndCompagnies = Math.floor(Math.random() * compagnies.length);
             await factory.create('Users', { CompanyId: compagnies[rndCompagnies].id });
         }
 
-        for (let i = 0 ; i<5;i++) {
+        const companyUser = await db.Company.findOne({
+            where: {
+                name: 'Gembani'
+            }
+        });
+        await factory.create('Users', { email: 'John@client.com', name: 'John Stock', CompanyId: companyUser.id});
+
+        const companyAccount = await db.Company.findOne({
+            where: {
+                name: 'Company 2'
+            }
+        });
+        await factory.create('Accounts', { CompanyId: companyAccount.id });
+
+        /*for (let i = 0 ; i<5;i++) {
             rndCompagnies = Math.floor(Math.random() * compagnies.length);
             await factory.create('Accounts', { CompanyId: compagnies[rndCompagnies].id });
-        }
+        }*/
 
         const accounts = await db.Account.findAll();
         for (let i = 0 ; i<5;i++) {
@@ -110,6 +125,7 @@ describe('Payload Converter', () => {
 
     test(`Expect getClientsId`, async () => {
         const clientsId = await payloadConvert.getClientsId();
+        console.log(clientsId);
         expect(!clientsId.some(isNaN)).toBe(true);
     });
 });
