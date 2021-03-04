@@ -30,6 +30,8 @@
 *
 * */
 
+const db = require('../models');
+
 class PayloadConverter {
 
 
@@ -46,10 +48,43 @@ class PayloadConverter {
         let tabOrga = this.payload.attendees.filter(att => att.organizer === true);
         return tabOrga;
     }
-    getNotClient() {
-        let tabOrga = this.payload.attendees.filter(att => att.organizer !== true && att.response_status == 'accepted');
-        return tabOrga;
+    getClientsId() {
+        var clientsId = [];
+        const payloadClients = this.payload.attendees.filter(att => att.organizer !== true && att.response_status === 'accepted');
+        payloadClients.map(client => {
+            const user = db.User.findOne({
+                where: {
+                    email: client.email
+                }
+            });
+            if(user) {
+                const account = db.Account.findOne({
+                    where: {
+                        UserId: user.id
+                    }
+                });
+                if(account && account.CompanyId === null) {
+                    clientsId.push(user.id);
+                } else {
+                    const id =  this.createClient(client);
+                    clientsId.push(id);
+                }
+            } else {
+                const id =  this.createClient(client);
+                clientsId.push(id);
+            }
+        })
+        return clientsId;
     }
+
+    createClient(client) {
+        const user = db.User.create({
+            email: client.email,
+            name: client.displayName
+        });
+        return user.id;
+    }
+
 
     onStart() {
         const start = this.payload.start;

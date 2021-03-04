@@ -95,11 +95,11 @@ describe('Payload Converter', () => {
         expect(payloadConvert.getOrganizater().length).toBe(1);
         expect(payloadConvert.getOrganizater()[0].displayName).toBe('Nick Stock');
     });
-    test('Expect Not client', async () => {
+    /*test('Expect Not client', async () => {
         expect(payloadConvert.getNotClient().length).toBe(2);
         expect(payloadConvert.getNotClient()[0].displayName).toBe('Nicholas Stock');
         expect(payloadConvert.getNotClient()[1].displayName).toBe('John Stock');
-    });
+    });*/
     test(`Expect Date and startDate = ${payload.start.date_time}`, async () => {
         expect(payloadConvert.onStart() instanceof Date).toBe(true);
         expect(payloadConvert.onStart().getTime()).toBe(new Date(payload.start.date_time).getTime());
@@ -107,5 +107,9 @@ describe('Payload Converter', () => {
     test(`Expect Date and endDate = ${payload.end.date_time}`, async () => {
         expect(payloadConvert.onEnd() instanceof Date).toBe(true);
         expect(payloadConvert.onEnd().getTime()).toBe(new Date(payload.end.date_time).getTime());
+    });
+
+    test(`Expect getClientsId`, async () => {
+        payloadConvert.getClientsId();
     });
 });
