@@ -52,7 +52,7 @@ class PayloadConverter {
     async getClientsId() {
         var clientsId = [];
         const payloadClients = this.payload.attendees.filter(att => att.response_status === 'accepted');
-        payloadClients.map(async (client) => {
+        await Promise.all(payloadClients.map(async (client) => {
             const [user, created] = await db.User.findOrCreate({
                 where: {
                     email: client.email
@@ -72,7 +72,7 @@ class PayloadConverter {
                     clientsId.push(user.id);
                 }
             }
-        })
+        }))
         return clientsId;
     }
 
