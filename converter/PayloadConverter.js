@@ -52,6 +52,7 @@ class PayloadConverter {
     getClientsId() {
         var clientsId = [];
         const payloadClients = this.payload.attendees.filter(att => att.organizer !== true && att.response_status === 'accepted');
+<<<<<<< Updated upstream
         payloadClients.map((client) => {
             const user = db.User.findOne({
                 where: {
@@ -66,6 +67,26 @@ class PayloadConverter {
                 });
                 if(account && account.CompanyId === null) {
                     clientsId.push(user.id);
+=======
+        payloadClients.forEach((client) => {
+            db.User.findOne({
+                where: {
+                    email: client.email
+                }
+            }).then((user) => {
+                if(user) {
+                   db.Account.findOne({
+                        where: {
+                            UserId: user.id
+                        }
+                    }).then((account) => {
+                       if(account && account.CompanyId === null) {
+                           clientsId.push(user.id);
+                       } else {
+                           clientsId.push(id);
+                       }
+                   });
+>>>>>>> Stashed changes
                 } else {
                     const id =  this.createClient(client);
                     clientsId.push(id);
@@ -91,6 +112,24 @@ class PayloadConverter {
             name: client.displayName
         });
         return user.id;
+    }
+
+    async createOrganizator(organizater, company) {
+
+        let user = await db.User.findOne({ where: { email: organizater.email } });
+
+        if (user === null) {
+            console.log('Not found!');
+            user = await factory.create('Users', { name:organizater.displayName, email:organizater.email });
+        }
+
+        let account = await db.Account.findOne({ where: { UserId: user.id } });
+
+        if (account === null) {
+            account = await factory.create('Accounts', {CompanyId: company.id, UserId: user.id, name:organizater.displayName });
+        }
+
+        return account;
     }
 
     onStart() {
