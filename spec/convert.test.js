@@ -77,7 +77,7 @@ describe('Payload Converter', () => {
             rndCompagnies = Math.floor(Math.random() * compagnies.length);
             rndUsers = Math.floor(Math.random() * users.length);
             //await factory.create('Accounts', {CompanyId: compagnies[rndCompagnies].id});
-            console.log(users[rndUsers].id,"qdsdqsqdsqds");
+            // console.log(users[rndUsers].id,"qdsdqsqdsqds");
             await factory.create('Accounts', {CompanyId: compagnies[rndCompagnies].id, UserId: users[rndUsers].id });
         }
 

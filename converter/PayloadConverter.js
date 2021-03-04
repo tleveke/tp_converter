@@ -53,46 +53,44 @@ class PayloadConverter {
         var clientsId = [];
         const payloadClients = this.payload.attendees.filter(att => att.organizer !== true && att.response_status === 'accepted');
         payloadClients.map((client) => {
-            db.User.findOne({
+            const user = db.User.findOne({
                 where: {
                     email: client.email
                 }
-            }).then((user) => {
-                if(user) {
-                   db.Account.findOne({
-                        where: {
-                            UserId: user.id
-                        }
-                    }).then((account) => {
-                       if(account && account.CompanyId === null) {
-                           clientsId.push(user.id);
-                       } else {
-                           const id =  this.createClient(client);
-                           clientsId.push(id);
-                       }
-                   });
+            });
+            if(user) {
+                const account = db.Account.findOne({
+                    where: {
+                        UserId: user.id
+                    }
+                });
+                if(account && account.CompanyId === null) {
+                    clientsId.push(user.id);
                 } else {
                     const id =  this.createClient(client);
                     clientsId.push(id);
                 }
-            })
+            } else {
+                const id =  this.createClient(client);
+                clientsId.push(id);
+            }
         })
         return clientsId;
     }
 
     createClient(client) {
-        var id = null;
         db.User.create({
             email: client.email,
             name: client.displayName
-        }).then((user) => {
-            db.Account.create({
-                UserId: user.id,
-                name: client.displayName
-            });
-            id = user.id;
+        }).then(user => {
+            console.log(user);
+        })
+
+        db.Account.create({
+            UserId: user.id,
+            name: client.displayName
         });
-        return id;
+        return user.id;
     }
 
     onStart() {
