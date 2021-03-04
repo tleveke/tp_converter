@@ -12,14 +12,20 @@ const factory = require('factory-girl').factory
 
 const payloadGlobal = {
                         attendees: [{
-                            displayName: 'Nick Stock',
-                            email: 'client@client.com',
-                            organizer: true,
-                            response_status: 'accepted'
-                        },
+                                displayName: 'Nick Stock',
+                                email: 'client@client.com',
+                                organizer: true,
+                                response_status: 'accepted'
+                            },
                             {
                                 displayName: 'Nicholas Stock',
                                 email: 'not_client@client.com',
+                                response_status: 'accepted',
+                                self: true
+                            },
+                            {
+                                displayName: 'John Stock',
+                                email: 'John@client.com',
                                 response_status: 'accepted',
                                 self: true
                             }
@@ -87,6 +93,15 @@ describe('Payload Converter', () => {
 
     test('Expect idGoogle = MGptdjJ1ZDljMWo3Y2kyZzFqZ21ybWY2c3Mgbmlja0BnZW1iYW5pLmNvbQ', async () => {
         expect(payloadConvert.getIdGoogle()).toBe('MGptdjJ1ZDljMWo3Y2kyZzFqZ21ybWY2c3Mgbmlja0BnZW1iYW5pLmNvbQ');
+    });
+    test('Expect Organizator', async () => {
+        expect(payloadConvert.getOrganizater().length).toBe(1);
+        expect(payloadConvert.getOrganizater()[0].displayName).toBe('Nick Stock');
+    });
+    test('Expect Not client', async () => {
+        expect(payloadConvert.getNotClient().length).toBe(2);
+        expect(payloadConvert.getNotClient()[0].displayName).toBe('Nicholas Stock');
+        expect(payloadConvert.getNotClient()[1].displayName).toBe('John Stock');
     });
     test(`Expect Date and startDate = ${payload.start.date_time}`, async () => {
         expect(payloadConvert.onStart() instanceof Date).toBe(true);

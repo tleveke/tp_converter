@@ -12,6 +12,12 @@
       email: 'not_client@client.com',
       response_status: 'accepted',
       self: true
+    },
+    {
+      displayName: 'John Stock',
+      email: 'John@client.com',
+      response_status: 'accepted',
+      self: true
     }
     ],
       end: { date_time: '2018-03-05T18:30:00.000+01:00' },
@@ -37,11 +43,11 @@ class PayloadConverter {
         return id;
     }
     getOrganizater() {
-        let tabOrga = this.payload.attendees.filter(att => att.organize === true);
+        let tabOrga = this.payload.attendees.filter(att => att.organizer === true);
         return tabOrga;
     }
     getNotClient() {
-        let tabOrga = this.payload.attendees.filter(att => att.organize !== true);
+        let tabOrga = this.payload.attendees.filter(att => att.organizer !== true && att.response_status == 'accepted');
         return tabOrga;
     }
 
